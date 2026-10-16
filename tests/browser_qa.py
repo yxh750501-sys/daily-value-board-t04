@@ -136,5 +136,22 @@ with sync_playwright() as playwright:
     assert not overflow, 'mobile horizontal overflow'
     print('PASS 390px mobile layout without horizontal overflow')
     print('PASS no JavaScript errors and no secret in live request URL')
+    review = browser.new_context()
+    review_page = review.new_page()
+    def reading(day, value):
+        return {'signal_id': 'seoul-temperature-2m', 'normalized_value': value, 'unit': '°C',
+                'source_name': 'Open-Meteo · 서울 2m 기온',
+                'source_url': 'https://api.open-meteo.com/v1/forecast?latitude=37.5665&longitude=126.9780&current=temperature_2m&timezone=Asia%2FSeoul&forecast_days=1',
+                'source_time': f'{day}T00:00:00.000Z', 'fetched_at': f'{day}T00:01:00.000Z',
+                'record_timezone': 'Asia/Seoul', 'record_date': day}
+    snapshot = {'schema_version': 't04-public-history-v1', 'readings': [reading('2026-10-15', 17.4), reading('2026-10-16', 19.2)],
+                'raw_by_date': {'2026-10-16': {'timezone': 'Asia/Seoul', 'current': {'time': '2026-10-16T09:00', 'temperature_2m': 19.2}, 'current_units': {'temperature_2m': '°C'}}}}
+    review_page.route('**/data/live-history.json', lambda route: route.fulfill(status=200, content_type='application/json', body=json.dumps(snapshot)))
+    review_page.goto(url, wait_until='domcontentloaded')
+    expect(review_page.locator('#live-count')).to_have_text('2건')
+    expect(review_page.locator('#live-delta')).to_contain_text('+1.8 °C')
+    expect(review_page.locator('#live-value')).to_have_text('19.2')
+    print('PASS fresh public reviewer sees two published dates and recalculated delta')
+    review.close()
     browser.close()
 server.shutdown()
