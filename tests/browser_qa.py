@@ -1,5 +1,5 @@
 """Run with: python3 tests/browser_qa.py (requires Playwright and Chromium)."""
-from datetime import datetime
+from datetime import datetime, timezone
 from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
 from pathlib import Path
 from threading import Thread
@@ -168,6 +168,25 @@ with sync_playwright() as playwright:
         raw_value = actual['raw_by_date'][latest['record_date']]['current']['temperature_2m']
         assert raw_value == latest['normalized_value']
         assert latest['source_url'].startswith('https://api.open-meteo.com/')
+        if len(actual['readings']) == 2:
+            first, second = actual['readings']
+            assert [first['record_date'], second['record_date']] == ['2026-10-16', '2026-10-17']
+            for reading in (first, second):
+                raw = actual['raw_by_date'][reading['record_date']]
+                assert raw['current']['temperature_2m'] == reading['normalized_value']
+                assert raw['current_units']['temperature_2m'] == reading['unit'] == '°C'
+                observed = datetime.fromisoformat(raw['current']['time']).replace(tzinfo=ZoneInfo('Asia/Seoul'))
+                assert observed.astimezone(timezone.utc).isoformat(timespec='milliseconds').replace('+00:00', 'Z') == reading['source_time']
+                assert datetime.fromisoformat(reading['fetched_at'].replace('Z', '+00:00')).astimezone(ZoneInfo('Asia/Seoul')).date().isoformat() == reading['record_date']
+                assert reading['source_url'] == first['source_url']
+            difference = round(second['normalized_value'] - first['normalized_value'], 3)
+            assert difference == -7.4
+            expect(real_page.locator('#live-delta')).to_contain_text('−7.4 °C')
+            assert real_page.locator('.record-row').count() == 2
+            expect(real_page.locator('#raw-data')).to_contain_text('14.4')
+            expect(real_page.locator('#stored-data')).to_contain_text('14.4')
+            expect(real_page.locator('#display-data')).to_contain_text('14.4 °C')
+            print('PASS two actual KST dates: raw/stored/display match, delta −7.4 °C')
         print(f"PASS real public record {latest['record_date']}: raw/stored/display {raw_value} °C")
         real_page.close()
     browser.close()
