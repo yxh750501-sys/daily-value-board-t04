@@ -34,6 +34,7 @@ with sync_playwright() as playwright:
     page.on('pageerror', lambda error: errors.append(str(error)))
     page.route('https://fonts.googleapis.com/**', lambda route: route.abort())
     page.route('https://fonts.gstatic.com/**', lambda route: route.abort())
+    page.route('**/data/live-history.json', lambda route: route.fulfill(status=404, body=''))
 
     def mock_live(route):
         requests.append(route.request.url)
@@ -153,5 +154,21 @@ with sync_playwright() as playwright:
     expect(review_page.locator('#live-value')).to_have_text('19.2')
     print('PASS fresh public reviewer sees two published dates and recalculated delta')
     review.close()
+    actual_path = ROOT / 'docs/data/live-history.json'
+    if actual_path.exists():
+        actual = json.loads(actual_path.read_text())
+        real_page = browser.new_page()
+        real_page.goto(url, wait_until='domcontentloaded')
+        latest = actual['readings'][-1]
+        expect(real_page.locator('#live-value')).to_have_text(str(latest['normalized_value']))
+        expect(real_page.locator('#live-unit')).to_have_text(latest['unit'])
+        expect(real_page.locator('#live-source-time')).to_contain_text('KST')
+        expect(real_page.locator('#live-fetched-time')).to_contain_text('KST')
+        expect(real_page.locator('#live-count')).to_have_text(f"{len(actual['readings'])}건")
+        raw_value = actual['raw_by_date'][latest['record_date']]['current']['temperature_2m']
+        assert raw_value == latest['normalized_value']
+        assert latest['source_url'].startswith('https://api.open-meteo.com/')
+        print(f"PASS real public record {latest['record_date']}: raw/stored/display {raw_value} °C")
+        real_page.close()
     browser.close()
 server.shutdown()
