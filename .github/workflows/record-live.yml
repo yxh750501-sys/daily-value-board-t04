@@ -6,6 +6,7 @@ on:
     paths:
       - .github/workflows/record-live.yml
       - scripts/record_live.py
+  # Also triggered by this update for the second real KST date.
   schedule:
     - cron: '15 15 * * *'
     - cron: '45 15 * * *'
