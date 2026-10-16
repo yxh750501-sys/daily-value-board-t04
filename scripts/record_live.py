@@ -1,10 +1,12 @@
 """Record one real Open-Meteo reading for the current Asia/Seoul date."""
 from datetime import datetime, timezone
 from pathlib import Path
+from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 from zoneinfo import ZoneInfo
 import json
 import math
+import time
 
 SOURCE_URL = 'https://api.open-meteo.com/v1/forecast?latitude=37.5665&longitude=126.9780&current=temperature_2m&timezone=Asia%2FSeoul&forecast_days=1'
 OUT = Path(__file__).resolve().parents[1] / 'docs/data/live-history.json'
@@ -51,10 +53,19 @@ def upsert(history, raw, fetched_at):
 
 def main():
     request = Request(SOURCE_URL, headers={'User-Agent': 'daily-value-board-t04/1.0'})
-    with urlopen(request, timeout=20) as response:
-        if response.status != 200:
-            raise RuntimeError(f'Open-Meteo returned {response.status}')
-        raw = json.load(response)
+    for attempt, delay in enumerate((0, 2, 5, 10)):
+        if delay:
+            time.sleep(delay)
+        try:
+            with urlopen(request, timeout=20) as response:
+                if response.status != 200:
+                    raise RuntimeError(f'Open-Meteo returned {response.status}')
+                raw = json.load(response)
+            break
+        except HTTPError as error:
+            if error.code not in (429, 500, 502, 503, 504) or attempt == 3:
+                raise
+            print(f'Open-Meteo HTTP {error.code}; retrying after a short wait', flush=True)
     fetched_at = datetime.now(timezone.utc).isoformat(timespec='milliseconds').replace('+00:00', 'Z')
     existing = json.loads(OUT.read_text()) if OUT.exists() else {}
     updated = upsert(existing, raw, fetched_at)
