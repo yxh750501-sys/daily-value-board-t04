@@ -4,17 +4,6 @@
   "readings": [
     {
       "signal_id": "seoul-temperature-2m",
-      "normalized_value": 12.1,
-      "unit": "°C",
-      "source_name": "Open-Meteo · 서울 2m 기온",
-      "source_url": "https://api.open-meteo.com/v1/forecast?latitude=37.5665&longitude=126.9780&current=temperature_2m&timezone=Asia%2FSeoul&forecast_days=1",
-      "source_time": "2026-10-18T18:15:00.000Z",
-      "fetched_at": "2026-10-18T18:16:31.483Z",
-      "record_timezone": "Asia/Seoul",
-      "record_date": "2026-10-19"
-    },
-    {
-      "signal_id": "seoul-temperature-2m",
       "normalized_value": 10.6,
       "unit": "°C",
       "source_name": "Open-Meteo · 서울 2m 기온",
@@ -23,15 +12,26 @@
       "fetched_at": "2026-10-19T20:42:33.310Z",
       "record_timezone": "Asia/Seoul",
       "record_date": "2026-10-20"
+    },
+    {
+      "signal_id": "seoul-temperature-2m",
+      "normalized_value": 13.1,
+      "unit": "°C",
+      "source_name": "Open-Meteo · 서울 2m 기온",
+      "source_url": "https://api.open-meteo.com/v1/forecast?latitude=37.5665&longitude=126.9780&current=temperature_2m&timezone=Asia%2FSeoul&forecast_days=1",
+      "source_time": "2026-10-20T19:00:00.000Z",
+      "fetched_at": "2026-10-20T19:11:11.766Z",
+      "record_timezone": "Asia/Seoul",
+      "record_date": "2026-10-21"
     }
   ],
   "raw_by_date": {
-    "2026-10-19": {
+    "2026-10-20": {
       "timezone": "Asia/Seoul",
       "current": {
-        "time": "2026-10-19T03:15",
+        "time": "2026-10-20T05:30",
         "interval": 900,
-        "temperature_2m": 12.1
+        "temperature_2m": 10.6
       },
       "current_units": {
         "time": "iso8601",
@@ -39,12 +39,12 @@
         "temperature_2m": "°C"
       }
     },
-    "2026-10-20": {
+    "2026-10-21": {
       "timezone": "Asia/Seoul",
       "current": {
-        "time": "2026-10-20T05:30",
+        "time": "2026-10-21T04:00",
         "interval": 900,
-        "temperature_2m": 10.6
+        "temperature_2m": 13.1
       },
       "current_units": {
         "time": "iso8601",
