@@ -20,7 +20,7 @@
       "source_name": "Open-Meteo · 서울 2m 기온",
       "source_url": "https://api.open-meteo.com/v1/forecast?latitude=37.5665&longitude=126.9780&current=temperature_2m&timezone=Asia%2FSeoul&forecast_days=1",
       "source_time": "2026-11-04T21:15:00.000Z",
-      "fetched_at": "2026-11-04T21:16:07.068Z",
+      "fetched_at": "2026-11-04T21:28:49.838Z",
       "record_timezone": "Asia/Seoul",
       "record_date": "2026-11-05"
     }
