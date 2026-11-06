@@ -4,17 +4,6 @@
   "readings": [
     {
       "signal_id": "seoul-temperature-2m",
-      "normalized_value": 9.0,
-      "unit": "°C",
-      "source_name": "Open-Meteo · 서울 2m 기온",
-      "source_url": "https://api.open-meteo.com/v1/forecast?latitude=37.5665&longitude=126.9780&current=temperature_2m&timezone=Asia%2FSeoul&forecast_days=1",
-      "source_time": "2026-11-04T21:15:00.000Z",
-      "fetched_at": "2026-11-04T21:28:49.838Z",
-      "record_timezone": "Asia/Seoul",
-      "record_date": "2026-11-05"
-    },
-    {
-      "signal_id": "seoul-temperature-2m",
       "normalized_value": 4.1,
       "unit": "°C",
       "source_name": "Open-Meteo · 서울 2m 기온",
@@ -23,15 +12,26 @@
       "fetched_at": "2026-11-05T21:33:46.006Z",
       "record_timezone": "Asia/Seoul",
       "record_date": "2026-11-06"
+    },
+    {
+      "signal_id": "seoul-temperature-2m",
+      "normalized_value": 0.1,
+      "unit": "°C",
+      "source_name": "Open-Meteo · 서울 2m 기온",
+      "source_url": "https://api.open-meteo.com/v1/forecast?latitude=37.5665&longitude=126.9780&current=temperature_2m&timezone=Asia%2FSeoul&forecast_days=1",
+      "source_time": "2026-11-06T20:45:00.000Z",
+      "fetched_at": "2026-11-06T20:51:22.911Z",
+      "record_timezone": "Asia/Seoul",
+      "record_date": "2026-11-07"
     }
   ],
   "raw_by_date": {
-    "2026-11-05": {
+    "2026-11-06": {
       "timezone": "Asia/Seoul",
       "current": {
-        "time": "2026-11-05T06:15",
+        "time": "2026-11-06T06:30",
         "interval": 900,
-        "temperature_2m": 9.0
+        "temperature_2m": 4.1
       },
       "current_units": {
         "time": "iso8601",
@@ -39,12 +39,12 @@
         "temperature_2m": "°C"
       }
     },
-    "2026-11-06": {
+    "2026-11-07": {
       "timezone": "Asia/Seoul",
       "current": {
-        "time": "2026-11-06T06:30",
+        "time": "2026-11-07T05:45",
         "interval": 900,
-        "temperature_2m": 4.1
+        "temperature_2m": 0.1
       },
       "current_units": {
         "time": "iso8601",
